@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "customer": "vamis",
+        "device": "bb",
+        "problem": "charging",
+        "status": "In Progress"
+    },
+    {
+        "id": 2,
+        "customer": "rr",
+        "device": "rrr",
+        "problem": "charging",
+        "status": "Received"
+    },
+    {
+        "id": 3,
+        "customer": "vamis",
+        "device": "lava",
+        "problem": "charging",
+        "status": "Received"
+    }
+]
