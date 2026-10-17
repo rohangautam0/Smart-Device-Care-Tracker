@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Device Care Tracker</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        header {
+            background: #123b68;
+            color: white;
+            padding: 24px 6%;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+            font-size: 26px;
+        }
+
+        header p {
+            margin: 0;
+            color: #dbeafe;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 28px auto;
+            padding: 0 20px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 3px 12px #0f172a08;
+        }
+
+        .card p {
+            color: #64748b;
+            margin: 0 0 12px;
+        }
+
+        .number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #123b68;
+        }
+
+        .panel {
+            background: white;
+            padding: 24px;
+            margin-bottom: 24px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 0;
+            color: #123b68;
+        }
+
+        input, select, button {
+            font: inherit;
+            padding: 12px;
+            border-radius: 7px;
+            border: 1px solid #cbd5e1;
+        }
+
+        input {
+            width: 100%;
+            margin: 6px 0 12px;
+        }
+
+        button {
+            background: #1764c0;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #123b68;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .search-form input {
+            flex: 1;
+            margin: 0;
+            min-width: 0;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #eff6ff;
+            color: #123b68;
+        }
+
+        td select {
+            max-width: 170px;
+            margin-bottom: 8px;
+        }
+
+        .update-form button {
+            display: block;
+        }
+
+        .link {
+            color: #1764c0;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 22px;
+            }
+
+            .panel {
+                padding: 16px;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Smart Device Care</h1>
+    <p>Repair Management Dashboard</p>
+</header>
+
+<div class="container">
+
+    <div class="cards">
+        <div class="card">
+            <p>Total Repairs</p>
+            <div class="number">{{ repairs|length }}</div>
+        </div>
+
+        <div class="card">
+            <p>Received</p>
+            <div class="number">
+                {{ repairs|selectattr('status', 'equalto', 'Received')|list|length }}
+            </div>
+        </div>
+
+        <div class="card">
+            <p>In Progress</p>
+            <div class="number">
+                {{ repairs|selectattr('status', 'equalto', 'In Progress')|list|length }}
+            </div>
+        </div>
+
+        <div class="card">
+            <p>Delivered</p>
+            <div class="number">
+                {{ repairs|selectattr('status', 'equalto', 'Delivered')|list|length }}
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Add New Repair</h2>
+
+        <form action="/add" method="POST">
+            <label>Customer Name</label>
+            <input type="text" name="customer"
+                   placeholder="Enter customer name" required>
+
+            <label>Device Name</label>
+            <input type="text" name="device"
+                   placeholder="e.g. Laptop or Mobile" required>
+
+            <label>Device Problem</label>
+            <input type="text" name="problem"
+                   placeholder="Describe the problem" required>
+
+            <button type="submit">+ Add Repair</button>
+        </form>
+    </div>
+
+    <div class="panel">
+        <h2>Search Repairs</h2>
+
+        <form action="/" method="GET" class="search-form">
+            <input type="text" name="search"
+                   placeholder="Search customer, device or problem"
+                   value="{{ search_query }}">
+            <button type="submit">Search</button>
+        </form>
+
+        {% if search_query %}
+            <p>Results for: <strong>{{ search_query }}</strong></p>
+            <a class="link" href="/">Show All Records</a>
+        {% endif %}
+    </div>
+
+    <div class="panel">
+        <h2>Repair Records</h2>
+
+        <div class="table-wrap">
+            <table>
+                <tr>
+                    <th>Customer</th>
+                    <th>Device</th>
+                    <th>Problem</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+                {% for repair in repairs %}
+                    {% if repair is mapping %}
+                    <tr>
+                        <td>{{ repair.customer }}</td>
+                        <td>{{ repair.device }}</td>
+                        <td>{{ repair.problem }}</td>
+                        <td>{{ repair.status }}</td>
+                        <td>
+                            <form class="update-form"
+                                  action="/update/{{ loop.index0 }}"
+                                  method="POST">
+                                <select name="status">
+                                    {% for status in statuses %}
+                                    <option value="{{ status }}"
+                                        {% if repair.status == status %}selected{% endif %}>
+                                        {{ status }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit">Update Status</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5">{{ repair }}</td>
+                    </tr>
+                    {% endif %}
+                {% else %}
+                    <tr>
+                        <td colspan="5">No repair records found.</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    Smart Device Care & Repair Tracker | Student Project
+</footer>
+
+</body>
+</html>

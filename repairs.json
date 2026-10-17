@@ -4,7 +4,7 @@
         "customer": "vamis",
         "device": "bb",
         "problem": "charging",
-        "status": "In Progress"
+        "status": "Received"
     },
     {
         "id": 2,
@@ -18,6 +18,12 @@
         "customer": "vamis",
         "device": "lava",
         "problem": "charging",
+        "status": "Received"
+    },
+    {
+        "customer": "Rahul Sharma",
+        "device": "Laptop",
+        "problem": "Keyboard not working",
         "status": "Received"
     }
 ]
