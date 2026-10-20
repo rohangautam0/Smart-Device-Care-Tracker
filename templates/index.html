@@ -173,9 +173,15 @@
 
 <body>
 
-<header>
-    <h1>Smart Device Care</h1>
-    <p>Repair Management Dashboard</p>
+<header style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+    <div>
+        <h1>Smart Device Care</h1>
+        <p>Repair Management Dashboard</p>
+    </div>
+
+    <form action="/logout" method="POST">
+        <button type="submit">Logout</button>
+    </form>
 </header>
 
 <div class="container">
